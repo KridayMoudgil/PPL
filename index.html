@@ -61,6 +61,8 @@
     </div>
 
     <script>
+        document.addEventListener("DOMContentLoaded", loadPosts);
+
         function addPost() {
             let forum = document.getElementById("forum");
             let newPost = document.getElementById("newPost").value;
@@ -69,8 +71,26 @@
                 postDiv.className = "post";
                 postDiv.innerHTML = `<p class="username">Anonymous:</p><p>${newPost}</p>`;
                 forum.prepend(postDiv);
+                savePost(newPost);
                 document.getElementById("newPost").value = "";
             }
+        }
+
+        function savePost(post) {
+            let posts = JSON.parse(localStorage.getItem("forumPosts")) || [];
+            posts.unshift(post);
+            localStorage.setItem("forumPosts", JSON.stringify(posts));
+        }
+
+        function loadPosts() {
+            let forum = document.getElementById("forum");
+            let posts = JSON.parse(localStorage.getItem("forumPosts")) || [];
+            posts.forEach(post => {
+                let postDiv = document.createElement("div");
+                postDiv.className = "post";
+                postDiv.innerHTML = `<p class="username">Anonymous:</p><p>${post}</p>`;
+                forum.appendChild(postDiv);
+            });
         }
     </script>
 </body>
